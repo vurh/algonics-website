@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algonics — Intelligent Power Electronics & IoT Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            /* Algonics brand palette */
+            --bg: #0a0e1a;
+            --bg-card: #111827;
+            --bg-card-hover: #172033;
+            --bg-surface: #0f1525;
+            --fg: #e8eaf0;
+            --fg-muted: #8892a8;
+            --blue: #1a8cff;
+            --blue-bright: #3da0ff;
+            --blue-glow: rgba(26, 140, 255, 0.12);
+            --blue-deep: #0057cc;
+            --red-dot: #e83030;
+            --red-glow: rgba(232, 48, 48, 0.15);
+            --energy: #00c853;
+            --energy-glow: rgba(0, 200, 83, 0.1);
+            --warm: #ff8c38;
+            --warm-glow: rgba(255, 140, 56, 0.1);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --serif: 'Instrument Serif', Georgia, serif;
+            --sans: 'DM Sans', system-ui, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--fg);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            padding: 0 3rem; height: 72px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(20px) saturate(1.6);
+            border-bottom: 1px solid var(--border);
+            animation: fadeDown 0.8s ease forwards;
+        }
+
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+
+        .nav-logo {
+            display: flex; align-items: center; gap: 0rem;
+            text-decoration: none;
+        }
+        .nav-logo img { height: 32px; width: auto; }
+
+        .nav-links { display: flex; gap: 2.2rem; list-style: none; align-items: center; }
+        .nav-links a { color: var(--fg-muted); text-decoration: none; font-size: 0.86rem; font-weight: 500; transition: color 0.25s; }
+        .nav-links a:hover { color: var(--fg); }
+
+        .nav-cta {
+            padding: 0.55rem 1.4rem; background: var(--blue); color: #fff; border: none; border-radius: 8px;
+            font-family: var(--sans); font-weight: 600; font-size: 0.85rem; cursor: pointer;
+            transition: all 0.3s; text-decoration: none;
+        }
+        .nav-cta:hover { background: var(--blue-bright); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(26, 140, 255, 0.3); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 8rem 3rem 4rem; max-width: 1280px; margin: 0 auto; position: relative;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-size: 0.8rem; font-weight: 600; color: var(--blue);
+            text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2rem;
+            animation: fadeUp 0.8s ease 0.2s both;
+        }
+        .hero-eyebrow .dot { width: 6px; height: 6px; background: var(--red-dot); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(232,48,48,0.4); } 50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(232,48,48,0); } }
+
+        .hero h1 {
+            font-family: var(--serif); font-weight: 400;
+            font-size: clamp(3rem, 6.5vw, 5.2rem); line-height: 1.08;
+            letter-spacing: -0.025em; margin-bottom: 2rem; max-width: 850px;
+            animation: fadeUp 0.8s ease 0.35s both;
+        }
+        .hero h1 em { font-style: italic; color: var(--blue); }
+
+        .hero-sub {
+            font-size: 1.15rem; line-height: 1.7; color: var(--fg-muted);
+            max-width: 620px; margin-bottom: 3rem; font-weight: 400;
+            animation: fadeUp 0.8s ease 0.5s both;
+        }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero-actions { display: flex; gap: 1rem; align-items: center; animation: fadeUp 0.8s ease 0.65s both; flex-wrap: wrap; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.95rem 2rem; background: var(--blue); color: #fff; border: none;
+            border-radius: 10px; font-family: var(--sans); font-weight: 600; font-size: 0.95rem;
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(26, 140, 255, 0.3); background: var(--blue-bright); }
+        .btn-primary svg { width: 18px; height: 18px; transition: transform 0.3s; }
+        .btn-primary:hover svg { transform: translateX(3px); }
+
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.95rem 1.6rem; background: none; color: var(--fg);
+            border: 1.5px solid var(--border-light); border-radius: 10px;
+            font-family: var(--sans); font-weight: 500; font-size: 0.95rem;
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+        }
+        .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+        /* Hero visual */
+        .hero-visual {
+            position: absolute; right: -2rem; top: 50%; transform: translateY(-50%);
+            width: 400px; height: 400px; pointer-events: none;
+            animation: fadeUp 1s ease 0.8s both;
+        }
+        .hero-ring { position: absolute; border: 1.5px solid rgba(26, 140, 255, 0.08); border-radius: 50%; animation: spin 30s linear infinite; }
+        .hero-ring:nth-child(1) { inset: 0; border-color: rgba(26, 140, 255, 0.1); }
+        .hero-ring:nth-child(2) { inset: 40px; border-color: rgba(232, 48, 48, 0.08); animation-direction: reverse; animation-duration: 25s; }
+        .hero-ring:nth-child(3) { inset: 80px; border-color: rgba(0, 200, 83, 0.08); animation-duration: 20s; }
+        .hero-ring-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; top: -5px; left: 50%; }
+        .hero-ring:nth-child(1) .hero-ring-dot { background: var(--blue); box-shadow: 0 0 12px rgba(26, 140, 255, 0.5); }
+        .hero-ring:nth-child(2) .hero-ring-dot { background: var(--red-dot); box-shadow: 0 0 12px rgba(232, 48, 48, 0.4); }
+        .hero-ring:nth-child(3) .hero-ring-dot { background: var(--energy); box-shadow: 0 0 12px rgba(0, 200, 83, 0.4); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .hero-center-badge {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 120px; height: 120px; background: var(--blue); border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #fff; box-shadow: 0 0 60px rgba(26, 140, 255, 0.25);
+        }
+        .hero-center-badge .big-num { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+        .hero-center-badge .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; margin-top: 0.2rem; }
+
+        /* ─── TRUST BAR ─── */
+        .trust-bar { background: var(--bg-surface); padding: 2.5rem 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .trust-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .trust-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--fg-muted); font-weight: 600; white-space: nowrap; }
+        .trust-logos { display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; flex: 1; }
+        .trust-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; font-weight: 600; color: var(--fg-muted); white-space: nowrap; }
+        .trust-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+
+        /* ─── STATS ─── */
+        .stats-wrap { max-width: 1280px; margin: 0 auto; padding: 4rem 3rem 0; }
+        .stats-bar {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+            background: var(--border); border-radius: 16px; overflow: hidden;
+        }
+        .stat-item { background: var(--bg-card); padding: 2.2rem 2rem; text-align: center; }
+        .stat-item .num { font-family: var(--serif); font-size: 2rem; color: var(--fg); line-height: 1; margin-bottom: 0.4rem; }
+        .stat-item .num .accent { color: var(--blue); }
+        .stat-item .desc { font-size: 0.78rem; color: var(--fg-muted); font-weight: 500; }
+
+        /* ─── SECTIONS ─── */
+        .section { max-width: 1280px; margin: 0 auto; padding: 7rem 3rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; gap: 2rem; flex-wrap: wrap; }
+        .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--blue); font-weight: 600; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .section-label .dot { width: 5px; height: 5px; background: var(--red-dot); border-radius: 50%; }
+        .section-title { font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 3.5vw, 2.8rem); letter-spacing: -0.02em; line-height: 1.15; max-width: 560px; }
+        .section-desc { color: var(--fg-muted); max-width: 420px; font-size: 0.95rem; line-height: 1.65; }
+
+        /* ─── SOLUTIONS ─── */
+        .solutions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        .solution-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 2.5rem 2rem; position: relative; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .solution-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .solution-card:hover::before { opacity: 1; }
+        .solution-card:hover { transform: translateY(-6px); background: var(--bg-card-hover); border-color: rgba(26, 140, 255, 0.15); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+        .solution-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-size: 1.5rem; }
+        .solution-card:nth-child(1) .solution-icon { background: var(--blue-glow); }
+        .solution-card:nth-child(2) .solution-icon { background: var(--energy-glow); }
+        .solution-card:nth-child(3) .solution-icon { background: var(--warm-glow); }
+        .solution-card h3 { font-weight: 600; font-size: 1.12rem; margin-bottom: 0.7rem; }
+        .solution-card p { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.65; margin-bottom: 1.5rem; }
+        .solution-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .solution-tags span { font-size: 0.68rem; font-weight: 500; padding: 0.3rem 0.6rem; border-radius: 6px; background: rgba(255,255,255,0.04); color: var(--fg-muted); border: 1px solid var(--border); }
+
+        /* ─── SHOWCASE ─── */
+        .showcase-section { background: var(--bg-surface); padding: 7rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .showcase-inner { max-width: 1280px; margin: 0 auto; padding: 0 3rem; }
+        .showcase-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+        .showcase-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.2rem; display: flex; gap: 1.5rem; transition: all 0.35s; }
+        .showcase-card:hover { border-color: rgba(26, 140, 255, 0.12); background: var(--bg-card-hover); }
+        .showcase-badge { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+        .showcase-card:nth-child(1) .showcase-badge { background: var(--red-glow); }
+        .showcase-card:nth-child(2) .showcase-badge { background: var(--blue-glow); }
+        .showcase-card:nth-child(3) .showcase-badge { background: var(--energy-glow); }
+        .showcase-card:nth-child(4) .showcase-badge { background: var(--warm-glow); }
+        .showcase-content h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .showcase-client { font-size: 0.73rem; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+        .showcase-content p { font-size: 0.86rem; line-height: 1.6; color: var(--fg-muted); }
+
+        /* ─── APPROACH ─── */
+        .approach-section { padding: 7rem 0; background: linear-gradient(180deg, var(--bg) 0%, #060a14 100%); }
+        .approach-inner { max-width: 1280px; margin: 0 auto; padding: 0 3rem; }
+        .approach-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 4rem; }
+        .approach-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.2rem; transition: all 0.35s; }
+        .approach-card:hover { background: var(--bg-card-hover); border-color: var(--border-light); }
+        .approach-num { font-family: var(--serif); font-size: 2.5rem; color: rgba(26, 140, 255, 0.15); line-height: 1; margin-bottom: 1rem; }
+        .approach-card h3 { font-weight: 600; font-size: 1.05rem; margin-bottom: 0.6rem; }
+        .approach-card p { color: var(--fg-muted); font-size: 0.86rem; line-height: 1.6; }
+
+        /* ─── PARTNERSHIPS ─── */
+        .partners-section { padding: 5rem 0; border-bottom: 1px solid var(--border); }
+        .partners-inner { max-width: 1280px; margin: 0 auto; padding: 0 3rem; }
+        .partners-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
+        .partner-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; text-align: center; transition: all 0.3s; }
+        .partner-card:hover { border-color: rgba(26, 140, 255, 0.15); background: var(--bg-card-hover); }
+        .partner-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.2rem; }
+        .partner-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+        .partner-card p { font-size: 0.82rem; color: var(--fg-muted); line-height: 1.5; }
+
+        /* ─── TESTIMONIALS ─── */
+        .testimonials-section { padding: 6rem 0; background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .testimonials-inner { max-width: 1280px; margin: 0 auto; padding: 0 3rem; }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 3rem; }
+        .testimonial-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; }
+        .testimonial-card blockquote { font-size: 0.93rem; line-height: 1.7; color: var(--fg); font-style: italic; margin-bottom: 1.5rem; position: relative; padding-left: 1.2rem; border-left: 3px solid var(--blue); }
+        .testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+        .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--blue-glow); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--blue); }
+        .testimonial-name { font-weight: 600; font-size: 0.88rem; }
+        .testimonial-role { font-size: 0.76rem; color: var(--fg-muted); }
+
+        /* ─── CTA ─── */
+        .cta-section { max-width: 1280px; margin: 0 auto; padding: 5rem 3rem 7rem; text-align: center; }
+        .cta-box {
+            background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue) 60%, #2da8ff 100%);
+            border-radius: 24px; padding: 5rem 3rem; position: relative; overflow: hidden;
+        }
+        .cta-box::before { content: ''; position: absolute; top: -50%; right: -20%; width: 500px; height: 500px; background: rgba(255, 255, 255, 0.06); border-radius: 50%; }
+        .cta-box::after { content: ''; position: absolute; bottom: -40%; left: -10%; width: 400px; height: 400px; background: rgba(255, 255, 255, 0.04); border-radius: 50%; }
+        .cta-box h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 4vw, 3rem); color: #fff; margin-bottom: 1rem; position: relative; z-index: 1; }
+        .cta-box p { color: rgba(255, 255, 255, 0.8); font-size: 1.05rem; margin-bottom: 2.5rem; max-width: 520px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
+        .cta-contacts { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; position: relative; z-index: 1; }
+
+        .btn-white {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 1rem 2rem; background: #fff; color: var(--blue-deep); border: none;
+            border-radius: 10px; font-family: var(--sans); font-weight: 600; font-size: 0.92rem;
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+        }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); }
+
+        .btn-outline-white {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 1rem 2rem; background: transparent; color: #fff;
+            border: 1.5px solid rgba(255,255,255,0.3); border-radius: 10px;
+            font-family: var(--sans); font-weight: 500; font-size: 0.92rem;
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+        }
+        .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); }
+
+        /* ─── FOOTER ─── */
+        footer { border-top: 1px solid var(--border); padding: 3rem; max-width: 1280px; margin: 0 auto; }
+        .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem; flex-wrap: wrap; gap: 2rem; }
+        .footer-brand { max-width: 360px; }
+        .footer-brand .nav-logo { margin-bottom: 0.8rem; display: inline-flex; }
+        .footer-brand .nav-logo img { height: 28px; }
+        .footer-brand p { color: var(--fg-muted); font-size: 0.84rem; line-height: 1.6; margin-bottom: 1rem; }
+        .footer-certs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+        .cert-badge { font-size: 0.65rem; font-weight: 600; padding: 0.25rem 0.55rem; border-radius: 5px; background: rgba(255,255,255,0.04); color: var(--fg-muted); border: 1px solid var(--border); }
+        .footer-cols { display: flex; gap: 3.5rem; }
+        .footer-col h4 { font-size: 0.71rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--fg-muted); margin-bottom: 1rem; font-weight: 600; }
+        .footer-col a { display: block; color: var(--fg); text-decoration: none; font-size: 0.84rem; margin-bottom: 0.5rem; transition: color 0.25s; }
+        .footer-col a:hover { color: var(--blue); }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+        .footer-bottom span { font-size: 0.76rem; color: var(--fg-muted); }
+        .footer-bottom .address { font-size: 0.76rem; color: var(--fg-muted); text-align: right; }
+
+        /* ─── ANIMATIONS ─── */
+        .reveal { opacity: 0; transform: translateY(32px); transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 1024px) {
+            .hero-visual { display: none; }
+            .solutions-grid, .approach-grid, .showcase-grid, .testimonial-grid { grid-template-columns: 1fr; }
+            .partners-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            nav { padding: 0 1.5rem; }
+            .nav-links { display: none; }
+            .hero { padding: 7rem 1.5rem 4rem; }
+            .section { padding: 4rem 1.5rem; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .stats-wrap { padding: 2rem 1.5rem 0; }
+            .hero-actions { flex-direction: column; align-items: flex-start; }
+            .cta-box { padding: 3rem 1.5rem; }
+            .footer-cols { gap: 2rem; flex-wrap: wrap; }
+            .footer-top { flex-direction: column; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+            .footer-bottom .address { text-align: center; }
+            .approach-inner, .showcase-inner, .partners-inner, .testimonials-inner { padding: 0 1.5rem; }
+            .trust-inner { justify-content: center; }
+            .partners-grid { grid-template-columns: 1fr; }
+            .cta-contacts { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-logo"><img src="logo.jpg" alt="Algonics"></a>
+    <ul class="nav-links">
+        <li><a href="#solutions">Solutions</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#approach">Approach</a></li>
+        <li><a href="#partnerships">Partners</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="#contact">Get in Touch</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-eyebrow"><span class="dot"></span> Power Electronics · IoT · Intelligent Systems</div>
+    <h1>Smart power systems <em>engineered</em> for the energy transition</h1>
+    <p class="hero-sub">From grid-tied hybrid inverters and UPS to EV charging infrastructure — Algonics designs and builds customised power electronics solutions integrated with IoT, cloud platforms and web-enabled monitoring systems.</p>
+    <div class="hero-actions">
+        <a class="btn-primary" href="#solutions">Explore Solutions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <a class="btn-ghost" href="#projects">View Projects</a>
+    </div>
+    <div class="hero-visual">
+        <div class="hero-ring"><div class="hero-ring-dot"></div></div>
+        <div class="hero-ring"><div class="hero-ring-dot"></div></div>
+        <div class="hero-ring"><div class="hero-ring-dot"></div></div>
+        <div class="hero-center-badge"><span class="big-num">15+</span><span class="label">Years of R&D</span></div>
+    </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust-bar">
+    <div class="trust-inner">
+        <span class="trust-label">Trusted by</span>
+        <div class="trust-logos">
+            <div class="trust-item"><div class="trust-icon">⚛️</div> BHAVINI — Dept. of Atomic Energy</div>
+            <div class="trust-item"><div class="trust-icon">🎓</div> IIT Mandi</div>
+            <div class="trust-item"><div class="trust-icon">🔬</div> Bose Institute</div>
+            <div class="trust-item"><div class="trust-icon">🏭</div> Neo Tele-Tronix</div>
+            <div class="trust-item"><div class="trust-icon">🔬</div> Saha Institute</div>
+        </div>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-wrap">
+    <div class="stats-bar reveal">
+        <div class="stat-item"><div class="num">100W–<span class="accent">100kW+</span></div><div class="desc">Power System Range</div></div>
+        <div class="stat-item"><div class="num"><span class="accent">DSP</span> Core</div><div class="desc">Digital Signal Processing</div></div>
+        <div class="stat-item"><div class="num"><span class="accent">OCPP</span></div><div class="desc">EV Charging Standard</div></div>
+        <div class="stat-item"><div class="num">ISO <span class="accent">9001</span></div><div class="desc">Quality Certified</div></div>
+    </div>
+</div>
+
+<!-- SOLUTIONS -->
+<section class="section" id="solutions">
+    <div class="section-header reveal">
+        <div><div class="section-label"><span class="dot"></span> Core Solutions</div><h2 class="section-title">Intelligent power electronics with connected ecosystems</h2></div>
+        <p class="section-desc">End-to-end design from DSP-controlled power stages to cloud dashboards — hardware, firmware, software and application layers under one roof.</p>
+    </div>
+    <div class="solutions-grid">
+        <div class="solution-card reveal">
+            <div class="solution-icon">⚡</div>
+            <h3>Grid-Tied Hybrid Inverters</h3>
+            <p>DSP-based inverter systems with active and reactive power control, MPPT-enabled solar charging, and seamless grid interaction. Single-phase to three-phase topologies for residential, commercial and industrial use.</p>
+            <div class="solution-tags"><span>MPPT Solar</span><span>Active/Reactive Power</span><span>IGBT/MOSFET</span><span>Grid-Interactive</span><span>SMPS</span></div>
+        </div>
+        <div class="solution-card reveal">
+            <div class="solution-icon">🔋</div>
+            <h3>UPS & Power Conversion</h3>
+            <p>Uninterruptible power, bidirectional AC-DC converters, and regenerative DC supplies with power factor &gt;0.97 and THD &lt;8%. IoT-enabled remote monitoring and SCADA integration.</p>
+            <div class="solution-tags"><span>Bidirectional</span><span>Regenerative</span><span>P.F. &gt;0.97</span><span>SCADA</span><span>Remote Monitoring</span></div>
+        </div>
+        <div class="solution-card reveal">
+            <div class="solution-icon">🔌</div>
+            <h3>EV Charging Systems</h3>
+            <p>Complete EVSE infrastructure — power electronics for DC fast chargers, OCPP-compliant firmware &amp; CMS, billing and payment integration, and cross-platform mobile applications.</p>
+            <div class="solution-tags"><span>OCPP</span><span>DC Fast Charging</span><span>CMS</span><span>Payment Gateway</span><span>Mobile Apps</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="showcase-section" id="projects">
+    <div class="showcase-inner">
+        <div class="section-header reveal">
+            <div><div class="section-label"><span class="dot"></span> Project Highlights</div><h2 class="section-title">Proven delivery across critical sectors</h2></div>
+            <p class="section-desc">From nuclear facility power systems to solar-IoT research — delivering complex, custom-engineered solutions.</p>
+        </div>
+        <div class="showcase-grid">
+            <div class="showcase-card reveal">
+                <div class="showcase-badge">⚛️</div>
+                <div class="showcase-content">
+                    <div class="showcase-client">BHAVINI — Dept. of Atomic Energy</div>
+                    <h3>Space Vector Modulated Variable Frequency Drive</h3>
+                    <p>Two-level SVM-based VFD for asynchronous induction machines at the PFBR facility, Kalpakkam. Delivered with on-site training and simulation. Algonics is an approved vendor for power electronics, UPS, drives and HMI for the PFBR project.</p>
+                </div>
+            </div>
+            <div class="showcase-card reveal">
+                <div class="showcase-badge">🎓</div>
+                <div class="showcase-content">
+                    <div class="showcase-client">IIT Mandi — SERB IMPRINT-2</div>
+                    <h3>WatEr-ERIS: Solar IoT Irrigation System</h3>
+                    <p>Joint research MoU for solar-powered, cloud-based automated irrigation. Designed IoT modules, solar panels, sensors and water pump integration with real-time data acquisition across Himachal Pradesh and Tamil Nadu.</p>
+                </div>
+            </div>
+            <div class="showcase-card reveal">
+                <div class="showcase-badge">🏭</div>
+                <div class="showcase-content">
+                    <div class="showcase-client">Neo Tele-Tronix Pvt. Ltd.</div>
+                    <h3>Bidirectional AC-DC Power Converters</h3>
+                    <p>IGBT-based 11kW regenerative bidirectional converters (48A, 220V DC) with &lt;3% ripple and ±2% stability. Also delivered phase-controlled variable frequency dual AC sources (47.5–52.5 Hz).</p>
+                </div>
+            </div>
+            <div class="showcase-card reveal">
+                <div class="showcase-badge">🏗️</div>
+                <div class="showcase-content">
+                    <div class="showcase-client">Urban Engineering Association</div>
+                    <h3>Power System Consultancy & Development</h3>
+                    <p>Consultant for power system design and development. System tested against RDSO specifications with satisfactory results and full technical clearance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- APPROACH -->
+<section class="approach-section" id="approach">
+    <div class="approach-inner">
+        <div class="section-header reveal">
+            <div><div class="section-label"><span class="dot"></span> Our Approach</div><h2 class="section-title">Where power hardware meets intelligent software</h2></div>
+            <p class="section-desc">Deep power electronics expertise combined with modern software engineering — enabling truly integrated, IoT-connected energy systems.</p>
+        </div>
+        <div class="approach-grid">
+            <div class="approach-card reveal"><div class="approach-num">01</div><h3>Digital Power Electronics</h3><p>DSP-controlled IGBT/MOSFET switching topologies. Proven firmware IP: PID, FFT, FIR, IIR, space vector modulation. Systems from 100W to 100kW+.</p></div>
+            <div class="approach-card reveal"><div class="approach-num">02</div><h3>IoT, HMI & Sensors</h3><p>Custom SOC-based IoT with RTOS, browser-based HMI, and sensor networks. Isolated voltage/current feedback to cloud-connected SCADA dashboards.</p></div>
+            <div class="approach-card reveal"><div class="approach-num">03</div><h3>Cloud & Applications</h3><p>Cross-platform web &amp; mobile apps, Python/Django backends, MongoDB, Redis, big data pipelines. Billing, payment and fleet management for EVSE.</p></div>
+            <div class="approach-card reveal"><div class="approach-num">04</div><h3>Custom Magnetics & Hardware</h3><p>In-house magnetic design with simulation tools. Complete power stack assembly — switching devices, snubbers, DC link capacitors, gate drivers, thermal management.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- PARTNERSHIPS -->
+<section class="partners-section" id="partnerships">
+    <div class="partners-inner">
+        <div class="section-header reveal">
+            <div><div class="section-label"><span class="dot"></span> Partnerships & Certifications</div><h2 class="section-title">Backed by global technology partnerships</h2></div>
+        </div>
+        <div class="partners-grid">
+            <div class="partner-card reveal"><div class="partner-icon">🔧</div><h4>Microchip Design Partner</h4><p>Official Design Partner for Microchip Technology since 2013, developing hardware and firmware integrating Microchip's DSP and microcontroller devices.</p></div>
+            <div class="partner-card reveal"><div class="partner-icon">⚛️</div><h4>BHAVINI Approved Vendor</h4><p>Enlisted by BHAVINI (Dept. of Atomic Energy) for power electronics, UPS, drives, industrial automation, HMI and embedded systems.</p></div>
+            <div class="partner-card reveal"><div class="partner-icon">🎓</div><h4>IIT Research Collaboration</h4><p>Active MoU with IIT Mandi for SERB-funded solar energy, IoT sensor networks and cloud automation projects under IMPRINT-2.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+    <div class="testimonials-inner">
+        <div class="section-header reveal">
+            <div><div class="section-label"><span class="dot"></span> What People Say</div><h2 class="section-title">Long-standing partnerships built on trust</h2></div>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card reveal">
+                <blockquote>Algonics, a rare combination of hardware and software expertise, is a unique team. We depend on their professional expertise and ideas to automate critical electrical test equipment. We have a more than decade-long partnership in our continuous endeavour to modernise our manufactured products.</blockquote>
+                <div class="testimonial-author"><div class="testimonial-avatar">AB</div><div><div class="testimonial-name">Mr. Arijit Basuray</div><div class="testimonial-role">Managing Director, Neo Tele-Tronix Pvt. Ltd.</div></div></div>
+            </div>
+            <div class="testimonial-card reveal">
+                <blockquote>Algonics have been a delight to work with — professional, knowledgeable, attentive, on time and on budget. Although we've never met in person, I always feel like I have a trusted team I can count on and who are supporting my success.</blockquote>
+                <div class="testimonial-author"><div class="testimonial-avatar">CG</div><div><div class="testimonial-name">Christine De La Garza</div><div class="testimonial-role">Founder & Designer, DelaCav Handcrafted Bootwear</div></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+    <div class="cta-box reveal">
+        <h2>Let's engineer your next power system</h2>
+        <p>Whether it's a custom inverter, an EV charging network, or an IoT-integrated energy platform — our team in Kolkata and the US is ready to help.</p>
+        <div class="cta-contacts">
+            <a href="mailto:info@algonics.com" class="btn-white">Email — info@algonics.com <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            <a href="tel:+913340042846" class="btn-outline-white">India +91-33-4004 2846</a>
+            <a href="tel:+17328516480" class="btn-outline-white">USA +1-732-851 6480</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-top">
+        <div class="footer-brand">
+            <a href="#" class="nav-logo"><img src="logo.jpg" alt="Algonics"></a>
+            <p>Algonics Systems Pvt. Ltd. — Design and development of intelligent power electronics integrated with IoT, cloud platforms and web-enabled systems. Serving defence, energy, industrial and EV mobility sectors.</p>
+            <div class="footer-certs">
+                <span class="cert-badge">ISO 9001 Certified</span>
+                <span class="cert-badge">Microchip Design Partner</span>
+                <span class="cert-badge">BHAVINI Approved Vendor</span>
+                <span class="cert-badge">CIN: U72900WB2008PTC124620</span>
+            </div>
+        </div>
+        <div class="footer-cols">
+            <div class="footer-col"><h4>Solutions</h4><a href="#solutions">Hybrid Inverters</a><a href="#solutions">UPS & Power Conversion</a><a href="#solutions">EV Chargers & EVSE</a><a href="#solutions">IoT & HMI</a></div>
+            <div class="footer-col"><h4>Company</h4><a href="#projects">Projects</a><a href="#approach">Our Approach</a><a href="#partnerships">Partnerships</a><a href="#contact">Contact</a></div>
+            <div class="footer-col"><h4>Reach Us</h4><a href="mailto:info@algonics.com">info@algonics.com</a><a href="tel:+913340042846">+91-33-4004 2846</a><a href="tel:+17328516480">+1-732-851 6480</a><a href="https://www.algonics.com">www.algonics.com</a></div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 Algonics Systems Pvt. Ltd. All rights reserved.</span>
+        <div class="address">#318, SDF Building, Sector V, Salt Lake, Kolkata 700091 &nbsp;|&nbsp; 14 Eastwood Blvd, Manalapan, NJ 07726</div>
+    </div>
+</footer>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
